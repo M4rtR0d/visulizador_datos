@@ -8,9 +8,42 @@ app = Flask(__name__)
 app.secret_key = 'your_secret_key'  # Necesario para usar sesiones
 UPLOAD_FOLDER = 'static'
 
+def generar_grafica_lineas(df, x_column, y_column, output_path):
+    """
+    Función para generar una gráfica a partir de un DataFrame y columnas seleccionadas.
+    """
+    plt.figure(figsize=(12, 6))
+    plt.plot(df[x_column], df[y_column], label=f'{y_column} vs {x_column}', color='blue')
+    plt.title(f'{y_column} vs {x_column}')
+    plt.xlabel(x_column)
+    plt.ylabel(y_column)
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    plt.legend()
+    plt.grid(True)
+    plt.savefig(output_path)
+    plt.close()
+
+def generar_grafica_barras(df, x_column, y_column, output_path):
+    """
+    Función para generar una gráfica de barras de acuerdo a lista entrega a la funcion como parametro a partir de un DataFrame y columnas seleccionadas.
+    """
+    plt.figure(figsize=(12, 6))
+    df.groupby(x_column)[y_column].sum().plot(kind='bar', color='blue')
+    plt.title(f'{y_column} vs {x_column}')
+    plt.xlabel(x_column)
+    plt.ylabel(y_column)
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+    plt.grid(True)
+    plt.savefig(output_path)
+    plt.close()
+
+    
+
 @app.route('/', methods=['GET', 'POST'])
 def upload_and_generate():
-    graph_file = None
+    graph_file_lineas = None
     dfhead_html = None
     dfdescribe_html = None
     dfinfo_html = None
@@ -62,21 +95,9 @@ def upload_and_generate():
                 x_column = request.form['x_column']
                 y_column = request.form['y_column']
 
-                # Crear la gráfica
-                plt.figure(figsize=(12, 6))
-                plt.plot(df[x_column], df[y_column], label=f'{y_column} vs {x_column}', color='blue')
-                plt.title(f'{y_column} vs {x_column}')
-                plt.xlabel(x_column)
-                plt.ylabel(y_column)
-                plt.xticks(rotation=45)
-                plt.tight_layout()
-                plt.legend()
-                plt.grid(True)
-
-                # Guardar la figura
-                graph_file = os.path.join(UPLOAD_FOLDER, 'grafico_personalizado.png')
-                plt.savefig(graph_file)
-                plt.close()
+                # Crear la gráfica utilizando la función separada
+                graph_file_lineas = os.path.join(UPLOAD_FOLDER, 'grafico_lineas.png')
+                generar_grafica_lineas(df, x_column, y_column, graph_file_lineas)
 
                 # Mantener las columnas disponibles para el formulario
                 columnas = df.columns.tolist()
@@ -94,7 +115,7 @@ def upload_and_generate():
 
     return render_template(
         'myapp.html',
-        graph_file=graph_file,
+        graph_file_lineas=graph_file_lineas,
         dfhead=dfhead_html,
         dfdescribe=dfdescribe_html,
         dfinfo=dfinfo_html,
