@@ -23,30 +23,28 @@
 
     <!-- Formulario para cargar un nuevo archivo -->
     <form method="POST" enctype="multipart/form-data" class="mb-5">
-        <!-- Campo para cargar archivo -->
         <input type="file" name="file" accept=".csv" required class="form-control mb-3">
         <button type="submit" class="btn btn-primary">Cargar archivo</button>
     </form>
 
-    <!-- Bloque para mostrar la vista previa de los datos -->
-    <div class="row justify-content-center">
-        {% if dfhead %}
-            <div class="col-md-5">
-                <h2 class="mb-3 text-center">Vista previa de los datos</h2>
-                <div class="table-responsive">
-                    {{ dfhead|safe }}
-                </div>
+    <div class="row">
+    {% if dfhead %}
+        <div class="col-md-6">
+            <h2 class="mb-3">Vista previa de los datos</h2>
+            <div class="table-responsive">
+                {{ dfhead|safe }}
             </div>
-        {% endif %}
-    
-        {% if dfinfo %}
-            <div class="col-md-5">
-                <h2 class="mb-3 text-center">Información de los datos</h2>
-                <div class="table-responsive">
-                    {{ dfinfo|safe }}
-                </div>
+        </div>
+    {% endif %}
+
+    {% if dfinfo %}
+        <div class="col-md-6">
+            <h2 class="mb-3">Información de los datos</h2>
+            <div class="table-responsive">
+                {{ dfinfo|safe }}
             </div>
-        {% endif %}
+        </div>
+    {% endif %}
     </div>
 
     <!-- Bloque para mostrar la descripción de los datos -->
@@ -57,9 +55,9 @@
         </div>
     {% endif %}
 
-    <!-- Bloque para seleccionar columnas y generar gráfica -->
+    <!-- Bloque para seleccionar columnas y generar gráfica de líneas -->
     {% if columnas %}
-        <h2 class="mb-3 text-center">Seleccionar columnas para la gráfica</h2>
+        <h2 class="mb-3 text-center">Seleccionar columnas para la gráfica de líneas</h2>
         <form method="POST" class="mb-5">
             <div class="row justify-content-center">
                 <div class="col-md-4">
@@ -80,23 +78,77 @@
                 </div>
             </div>
             <div class="text-center mt-4">
-                <button type="submit" class="btn btn-primary">Generar gráfica</button>
+                <button type="submit" class="btn btn-primary">Generar gráfica de líneas</button>
             </div>
         </form>
     {% endif %}
 
-    <!-- Bloque para mostrar la gráfica -->
+    <!-- Bloque para mostrar la gráfica de líneas -->
     {% if graph_file_lineas %}
-        <h2 class="mb-3 text-center">Gráfico de linea</h2>
+    <h2 class="mb-3 text-center">Gráfico de Líneas</h2>
+    <div class="text-center mb-4">
+        <img src="{{ graph_file_lineas }}" alt="Gráfico de Líneas" class="img-fluid">
+    </div>
+    {% endif %}
+
+    <!-- Bloque para seleccionar columnas y generar gráfica de lineas múltiple -->
+    {% if columnas %}
+        <h2 class="mb-3 text-center">Seleccionar columnas para la gráfica múltiple</h2>
+        <form method="POST" class="mb-5">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <label for="selected_columns_multiple" class="form-label">Seleccionar columnas</label>
+                    <select name="selected_columns_multiple" id="selected_columns_multiple" class="form-select" multiple required>
+                        {% for col in columnas %}
+                            <option value="{{ col }}">{{ col }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-primary">Generar gráfica múltiple</button>
+            </div>
+        </form>
+    {% endif %}
+
+    <!-- Bloque para mostrar la gráfica múltiple -->
+    {% if graph_file_multiple %}
+    <h2 class="mb-3 text-center">Gráfico Múltiple</h2>
+    <div class="text-center mb-4">
+        <img src="{{ graph_file_multiple }}" alt="Gráfico Múltiple" class="img-fluid">
+    </div>
+    {% endif %}
+
+    <!-- Bloque para seleccionar columnas y generar gráfica de barras -->
+    {% if columnas %}
+    <h2 class="mb-3 text-center">Seleccionar columnas para la gráfica de barras</h2>
+    <form method="POST" class="mb-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <label for="selected_columns" class="form-label">Seleccionar columnas</label>
+                <select name="selected_columns" id="selected_columns" class="form-select" multiple required>
+                    {% for col in columnas %}
+                        <option value="{{ col }}">{{ col }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="text-center mt-4">
+            <button type="submit" class="btn btn-primary">Generar gráfica de barras</button>
+        </div>
+    </form>
+    {% endif %}
+
+    <!-- Bloque para mostrar la gráfica de barras -->
+    {% if graph_file_barras %}
+        <h2 class="mb-3 text-center">Gráfico de Barras</h2>
         <div class="text-center mb-4">
-            <img src="{{ graph_file_lineas }}" alt="Gráfica" class="img-fluid">
+            <img src="{{ graph_file_barras }}" alt="Gráfico de Barras" class="img-fluid">
         </div>
     {% endif %}
 
     <footer class="text-center mt-5">
         <p>&copy; 2025 - Visualizador de datos MR</p>
     </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
